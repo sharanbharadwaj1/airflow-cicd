@@ -1,0 +1,25 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/mlops-ld/bank-campaign-model', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/mlops-ld/bank-campaign-model']
+
+# - name: 'gcr.io/mlops-ld/bank-campaign-model'
+#   entrypoint: 'bash'
+#   args:
+#    - '-c'
+#    - |
+#       python -m pytest
+
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/sharanbharadwaj1/airflow-cicd.git']
+
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'airflow-cicd/bank_campaign_model_training.py', 'gs://us-central1-airflow-mlops-4fae755a-bucket/dags']
+
+images:
+- 'gcr.io/mlops-ld/bank-campaign-model'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
